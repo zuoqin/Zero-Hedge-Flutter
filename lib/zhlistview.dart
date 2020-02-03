@@ -2,17 +2,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:zerohedge/zhitem.dart';
 import 'package:zerohedge/API.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:zerohedge/zhlistitem.dart';
 import 'dart:convert';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_html/flutter_html.dart';
 
-class ZHListView extends StatelessWidget {
+class ZHListView extends StatefulWidget {
   @override
   createState() => _ZHListScreenState();
 }
 
 class _ZHListScreenState extends State {
   var zhitems = new List<ZHItem>();
-
+  final Completer<WebViewController> _controller =
+  Completer<WebViewController>();
   _getitems() {
     API.getItems().then((response) {
       setState(() {
@@ -32,15 +35,20 @@ class _ZHListScreenState extends State {
   }
 
   @override
+
   build(context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("User List"),
+          title: Text("Zero Hedge"),
         ),
         body: ListView.builder(
           itemCount: zhitems.length,
           itemBuilder: (context, index) {
-            return ListTile(title: Text(zhitems[index].title));
+            return Container(
+                child: Html(
+                    data: zhitems[index].title
+                  )
+            );
           },
         ));
   }
