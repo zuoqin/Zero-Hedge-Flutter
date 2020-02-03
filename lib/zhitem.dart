@@ -5,7 +5,7 @@ class ZHItem {
   String reference;
   String picture;
 
-  User(String title, String updated, String introduction, String reference, String picture) {
+  ZHItem(String title, String updated, String introduction, String reference, String picture) {
     this.title = title;
     this.updated = updated;
     this.introduction = introduction;
