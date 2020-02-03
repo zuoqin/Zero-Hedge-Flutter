@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 const baseUrl = "https://zh.eliz.club/api/stories?page=";
 
 class API {
-  static Future getItems() {
-    var url = baseUrl + "0";
+  static Future getItems(page) {
+    var url = baseUrl + page;
     return http.get(url);
   }
   static Future getStory(reference) {

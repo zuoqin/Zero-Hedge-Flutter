@@ -21,13 +21,16 @@ class ZHItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('99999999' + reference);
     return Scaffold(
-        body: WebView(
-          initialUrl: reference,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
-        ));
+        body: Container(
+          margin: const EdgeInsets.only(top: 20.0),
+          child :WebView(
+            initialUrl: reference,
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller.complete(webViewController);
+            },
+          )
+        )
+    );
   }
 }

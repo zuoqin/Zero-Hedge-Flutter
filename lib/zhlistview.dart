@@ -19,8 +19,8 @@ class _ZHListScreenState extends State {
   Completer<WebViewController>();
 
 
-  _getitems() {
-    API.getItems().then((response) {
+  _getitems(page) {
+    API.getItems(page).then((response) {
       setState(() {
         Iterable list = json.decode(response.body);
         zhitems = list.map((model) => ZHItem.fromJson(model)).toList();
@@ -44,7 +44,7 @@ class _ZHListScreenState extends State {
 
   initState() {
     super.initState();
-    _getitems();
+    _getitems("0");
   }
 
   dispose() {
@@ -75,29 +75,105 @@ class _ZHListScreenState extends State {
     );
   }
 
+  Widget _buildStoryTitle(zhitem) => Row(
+    children: [
+      GestureDetector(
+          child: Html(
+            data: zhitem.title,
+            backgroundColor: Colors.blueAccent,
+            defaultTextStyle: TextStyle(color: Colors.white),
+          ),
+
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
+                reference: "https://zh.eliz.club/story?url=" + zhitem.reference,
+                title: zhitem.title,
+                updated: zhitem.updated,
+                body: ''
+            ))
+            );
+          })
+    ],
+  );
+
+  Widget _buildStoryIntroduction(zhitem) => Row(
+    children: [
+      Column(
+          children: [
+            Image.network(zhitem.picture)
+          ]
+      ),
+      Column(
+        children: [
+          GestureDetector(
+              child: Html(
+                data: zhitem.introduction,
+              ),
+
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
+                    reference: "https://zh.eliz.club/story?url=" + zhitem.reference,
+                    title: zhitem.title,
+                    updated: zhitem.updated,
+                    body: ''
+                ))
+                );
+              })
+        ]
+      )
+
+    ],
+  );
+
+  
+  Widget _buildStoryUpdate(zhitem) => Row(
+    children: [
+      Html(
+        data: zhitem.updated,
+      ),
+    ],
+  );
+
+  
   @override
   build(context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Zero Hedge"),
+          title: Text("ZH"),
+          actions: <Widget>[
+            FlatButton(
+              textColor: Colors.white,
+              onPressed: () {_getitems("0");},
+              child: Text("Home"),
+            ),
+            FlatButton(
+              textColor: Colors.white,
+              onPressed: () {_getitems("1");},
+              child: Text("Page 1"),
+            ),
+            FlatButton(
+              textColor: Colors.white,
+              onPressed: () {_getitems("2");},
+              child: Text("Page 2"),
+            ),
+            FlatButton(
+              textColor: Colors.white,
+              onPressed: () {_getitems("3");},
+              child: Text("Page 3"),
+            ),
+          ],
         ),
         body: ListView.builder(
           itemCount: zhitems.length,
           itemBuilder: (context, index) {
-            return GestureDetector(
-                child: Html(
-                    data: ("<div class=\"row\"><div class=\"col-xs-4\"><img src=" + zhitems[index].picture + "></div><div class=\"col-xs-4\">" +
-                    zhitems[index].title + "</div></div>")
-                  ),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
-                    reference: "https://zh.eliz.club/story?url=" + zhitems[index].reference,
-                    title: zhitems[index].title,
-                    updated: zhitems[index].updated,
-                    body: ''
-                  ))
-                  );
-                },
+            return Container(
+                child: Column(
+                  children: [
+                    _buildStoryTitle(zhitems[index]),
+                    _buildStoryIntroduction(zhitems[index]),
+                    _buildStoryUpdate(zhitems[index])
+                  ]
+                )
             );
           },
         ));
