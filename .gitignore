@@ -1,6 +1,7 @@
 pubspec.lock
 .metadata
 android/key.properties
+key.jks
 
 # Miscellaneous
 *.class
