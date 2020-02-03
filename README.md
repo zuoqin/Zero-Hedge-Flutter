@@ -16,5 +16,5 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-flutter build appbundle
-java -jar ~/Downloads/bundletool-all-0.12.0.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=build/app/outputs/bundle/release/app.apks --ks=key.jks --ks-pass=pass:password --ks-key-alias=key --key-pass=pass:password --mode=universal --overwrite
+1. flutter build appbundle
+2. java -jar ~/Downloads/bundletool-all-0.12.0.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=build/app/outputs/bundle/release/app.apks --ks=key.jks --ks-pass=pass:password --ks-key-alias=key --key-pass=pass:password --mode=universal --overwrite
