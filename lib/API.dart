@@ -12,5 +12,10 @@ class API {
     var url = "https://zh.eliz.club/api/story?url=" + reference;
     return http.get(url);
   }
+
+  static Future searchItems(search, page) {
+    var url = "https://zh.eliz.club/api/search?srchtext=" + search + "&page=" + page;
+    return http.get(url);
+  }
 }
 

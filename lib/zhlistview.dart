@@ -18,9 +18,16 @@ class _ZHListScreenState extends State {
   final Completer<WebViewController> _controller =
   Completer<WebViewController>();
 
+  Choice _selectedChoice = choices[0]; // The app's "state".
+  Icon _searchIcon = new Icon(Icons.search);
+  Widget _appBarTitle = new Text( 'Search ZH' );
+  final _controller1 = TextEditingController();
 
-  _getitems(page) {
-    API.getItems(page).then((response) {
+  void _handleSubmitted(String value) {
+    debugPrint('55555 ' + value);
+
+
+    API.searchItems(value, "0").then((response) {
       setState(() {
         Iterable list = json.decode(response.body);
         zhitems = list.map((model) => ZHItem.fromJson(model)).toList();
@@ -28,8 +35,28 @@ class _ZHListScreenState extends State {
     });
   }
 
+  void _select(Choice choice) {
+    if(choice.title == "Home") {
+      _getitems("0");
+    }
+    else {
+
+      _getitems(choice.title.substring(5));
+    }
+  }
+
+  _getitems(page) {
+    API.getItems(page).then((response) {
+      setState(() {
+        Iterable list = json.decode(response.body);
+        zhitems = list.map((model) => ZHItem.fromJson(model)).toList();
+        debugPrint('888888 ' + page + " page");
+      });
+    });
+  }
+
   _getitem(reference) {
-    debugPrint('666666' + reference);
+
     API.getStory(reference).then((response) {
       debugPrint('777777' + response.body);
       Map<String, dynamic> zhitem = json.decode(response.body)[0];
@@ -78,12 +105,14 @@ class _ZHListScreenState extends State {
   Widget _buildStoryTitle(zhitem) => Row(
     children: [
       GestureDetector(
-          child: Html(
-            data: zhitem.title,
-            backgroundColor: Colors.blueAccent,
-            defaultTextStyle: TextStyle(color: Colors.white),
+          child: Container(
+            margin: const EdgeInsets.only(top: 5.0),
+            child :Html(
+              data: zhitem.title,
+              backgroundColor: Colors.blueAccent,
+              defaultTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+            ),
           ),
-
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
                 reference: "https://zh.eliz.club/story?url=" + zhitem.reference,
@@ -100,26 +129,35 @@ class _ZHListScreenState extends State {
     children: [
       Column(
           children: [
-            Image.network(zhitem.picture)
+            Container(
+              child: zhitem.picture == null ? null : Image.network(zhitem.picture),
+            )
           ]
       ),
-      Column(
+      Flexible(
+      child:Column(
         children: [
-          GestureDetector(
-              child: Html(
-                data: zhitem.introduction,
-              ),
+          Container(
+            child: GestureDetector(
 
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
-                    reference: "https://zh.eliz.club/story?url=" + zhitem.reference,
-                    title: zhitem.title,
-                    updated: zhitem.updated,
-                    body: ''
-                ))
-                );
-              })
+                child: Html(
+                    data: zhitem.introduction,
+
+                ),
+
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
+                      reference: "https://zh.eliz.club/story?url=" + zhitem.reference,
+                      title: zhitem.title,
+                      updated: zhitem.updated,
+                      body: ''
+                  ))
+                  );
+                })
+          )
+
         ]
+      )
       )
 
     ],
@@ -134,32 +172,52 @@ class _ZHListScreenState extends State {
     ],
   );
 
-  
+
+  void _searchPressed() {
+    setState(() {
+      if (this._searchIcon.icon == Icons.search) {
+
+        this._searchIcon = new Icon(Icons.close);
+        this._appBarTitle = new TextFormField(
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: _handleSubmitted,
+          controller: _controller1,
+          decoration: new InputDecoration(
+              prefixIcon: new Icon(Icons.search),
+              hintText: 'Search...'
+          ),
+        );
+      } else {
+        this._searchIcon = new Icon(Icons.search);
+        this._appBarTitle = new Text( 'Search ZH' );
+        _controller1.clear();
+      }
+    });
+  }
+
   @override
   build(context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("ZH"),
+          title: _appBarTitle,
+          leading: new IconButton(
+            icon: _searchIcon,
+            onPressed: _searchPressed,
+
+          ),
           actions: <Widget>[
-            FlatButton(
-              textColor: Colors.white,
-              onPressed: () {_getitems("0");},
-              child: Text("Home"),
-            ),
-            FlatButton(
-              textColor: Colors.white,
-              onPressed: () {_getitems("1");},
-              child: Text("Page 1"),
-            ),
-            FlatButton(
-              textColor: Colors.white,
-              onPressed: () {_getitems("2");},
-              child: Text("Page 2"),
-            ),
-            FlatButton(
-              textColor: Colors.white,
-              onPressed: () {_getitems("3");},
-              child: Text("Page 3"),
+
+            // overflow menu
+            PopupMenuButton<Choice>(
+              onSelected: _select,
+              itemBuilder: (BuildContext context) {
+                return choices.skip(2).map((Choice choice) {
+                  return PopupMenuItem<Choice>(
+                    value: choice,
+                    child: Text(choice.title),
+                  );
+                }).toList();
+              },
             ),
           ],
         ),
@@ -179,3 +237,19 @@ class _ZHListScreenState extends State {
         ));
   }
 }
+
+class Choice {
+  const Choice({this.title, this.icon});
+
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = const <Choice>[
+  const Choice(title: 'Car', icon: Icons.directions_car),
+  const Choice(title: 'Bicycle', icon: Icons.directions_bike),
+  const Choice(title: 'Home', icon: Icons.directions_boat),
+  const Choice(title: 'Page 1', icon: Icons.directions_bus),
+  const Choice(title: 'Page 2', icon: Icons.directions_railway),
+  const Choice(title: 'Page 3', icon: Icons.directions_walk),
+];
