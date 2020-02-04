@@ -22,10 +22,12 @@ class _ZHListScreenState extends State {
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( 'Search ZH' );
   final _controller1 = TextEditingController();
+  var issearch = false;
+  String search_text = '';
 
   void _handleSubmitted(String value) {
-    debugPrint('55555 ' + value);
-
+    issearch = true;
+    search_text = value;
 
     API.searchItems(value, "0").then((response) {
       setState(() {
@@ -46,13 +48,22 @@ class _ZHListScreenState extends State {
   }
 
   _getitems(page) {
-    API.getItems(page).then((response) {
-      setState(() {
-        Iterable list = json.decode(response.body);
-        zhitems = list.map((model) => ZHItem.fromJson(model)).toList();
-        debugPrint('888888 ' + page + " page");
+    if(issearch && page != 0 && page != '0'){
+      API.searchItems(search_text, page).then((response) {
+        setState(() {
+          Iterable list = json.decode(response.body);
+          zhitems = list.map((model) => ZHItem.fromJson(model)).toList();
+        });
       });
-    });
+    } else{
+      issearch = false;
+      API.getItems(page).then((response) {
+        setState(() {
+          Iterable list = json.decode(response.body);
+          zhitems = list.map((model) => ZHItem.fromJson(model)).toList();
+        });
+      });
+    }
   }
 
   _getitem(reference) {
