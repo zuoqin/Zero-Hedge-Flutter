@@ -14,7 +14,7 @@ class API {
   }
 
   static Future searchItems(search, page) {
-    var url = "https://news.ehedge.xyz/search?srchtext=" + search + "&page=" + page;
+    var url = "https://news.ehedge.xyz/api/search?srchtext=" + search + "&page=" + page;
     return http.get(url);
   }
 }
