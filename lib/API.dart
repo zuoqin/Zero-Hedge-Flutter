@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
-const baseUrl = "https://zh.eliz.club/api/stories?page=";
+const baseUrl = "https://news.ehedge.xyz/api/stories?page=";
 
 class API {
   static Future getItems(page) {
@@ -9,12 +9,12 @@ class API {
     return http.get(url);
   }
   static Future getStory(reference) {
-    var url = "https://zh.eliz.club/api/story?url=" + reference;
+    var url = "https://news.ehedge.xyz/api/story?url=" + reference;
     return http.get(url);
   }
 
   static Future searchItems(search, page) {
-    var url = "https://zh.eliz.club/api/search?srchtext=" + search + "&page=" + page;
+    var url = "https://news.ehedge.xyz/search?srchtext=" + search + "&page=" + page;
     return http.get(url);
   }
 }

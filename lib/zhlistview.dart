@@ -20,7 +20,7 @@ class _ZHListScreenState extends State {
 
   Choice _selectedChoice = choices[0]; // The app's "state".
   Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text( 'Search ZH' );
+  Widget _appBarTitle = new Text( 'Search news' );
   final _controller1 = TextEditingController();
   var issearch = false;
   String search_text = '';
@@ -67,9 +67,7 @@ class _ZHListScreenState extends State {
   }
 
   _getitem(reference) {
-
     API.getStory(reference).then((response) {
-      debugPrint('777777' + response.body);
       Map<String, dynamic> zhitem = json.decode(response.body)[0];
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
         body: zhitem['body'],
@@ -200,7 +198,7 @@ class _ZHListScreenState extends State {
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text( 'Search ZH' );
+        this._appBarTitle = new Text( 'Search news' );
         _controller1.clear();
       }
     });
