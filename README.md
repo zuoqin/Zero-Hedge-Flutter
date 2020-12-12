@@ -18,3 +18,5 @@ samples, guidance on mobile development, and a full API reference.
 
 1. flutter build appbundle
 2. java -jar ~/Downloads/bundletool-all-0.12.0.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=build/app/outputs/bundle/release/app.apks --ks=key.jks --ks-pass=pass:password --ks-key-alias=key --key-pass=pass:password --mode=universal --overwrite
+3. unzip app.apks -d apks
+4. check version: ~/Library/Android/sdk/build-tools/29.0.2/aapt dump badging build/app/outputs/bundle/release/apks/universal.apk

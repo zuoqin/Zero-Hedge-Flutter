@@ -135,38 +135,43 @@ class _ZHListScreenState extends State {
   );
 
   Widget _buildStoryIntroduction(zhitem) => Row(
-    children: [
-      Column(
-          children: [
-            Container(
-              child: zhitem.picture == null ? null : Image.network(zhitem.picture),
-            )
-          ]
-      ),
-      Flexible(
-      child:Column(
-        children: [
-          Container(
-            child: GestureDetector(
-
-                child: Html(
-                    data: zhitem.introduction,
-
-                ),
-
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
-                      reference: "https://news.ehedge.xyz/story?url=" + zhitem.reference,
-                      title: zhitem.title,
-                      updated: zhitem.updated,
-                      body: ''
-                  ))
-                  );
-                })
+    children: <Widget>[
+      Expanded(
+        flex: 4,
+        child:
+          Column(
+            children: [
+              Container(
+                child: zhitem.picture == null ? null : Image.network(zhitem.picture),
+              )
+            ]
           )
+      ),
+      Expanded(
+          flex: 6,
+          child:Column(
+            children: [
+              Container(
+                child: GestureDetector(
 
-        ]
-      )
+                    child: Html(
+                        data: zhitem.introduction,
+
+                    ),
+
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
+                          reference: "https://news.ehedge.xyz/story?url=" + zhitem.reference,
+                          title: zhitem.title,
+                          updated: zhitem.updated,
+                          body: ''
+                      ))
+                      );
+                    })
+              )
+
+            ]
+          )
       )
 
     ],
