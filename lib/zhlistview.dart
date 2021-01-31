@@ -124,7 +124,7 @@ class _ZHListScreenState extends State {
           ),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
-                reference: "https://news.ehedge.xyz/story?url=" + zhitem.reference,
+                reference: "https://news.zhedge.xyz/story?url=" + zhitem.reference,
                 title: zhitem.title,
                 updated: zhitem.updated,
                 body: ''
@@ -161,7 +161,7 @@ class _ZHListScreenState extends State {
 
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ZHItemView(
-                          reference: "https://news.ehedge.xyz/story?url=" + zhitem.reference,
+                          reference: "https://news.zhedge.xyz/story?url=" + zhitem.reference,
                           title: zhitem.title,
                           updated: zhitem.updated,
                           body: ''
